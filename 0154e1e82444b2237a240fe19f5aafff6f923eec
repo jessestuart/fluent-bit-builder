@@ -1,3 +1,8 @@
 [ver:1,total:60]
 .circleci/config.yml:40,1526958000:40,m
 .circleci/load_env.sh:20,1526958000:20,m
+
+[ver:1,total:300]
+.circleci/load_env.sh:140,1526958000:140,m
+.circleci/build_image.sh:80,1526958000:80,m
+.circleci/config.yml:80,1526958000:80,m
