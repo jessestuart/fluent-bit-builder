@@ -2,3 +2,7 @@
 .circleci/config.yml:126,1526961600:126,m
 .circleci/load_env.sh:42,1526961600:42,r
 .circleci/push_manifest.sh:12,1526961600:12,r
+
+[ver:1,total:240]
+.circleci/push_manifest.sh:180,1526958000:180,r
+Dockerfile:60,1526958000:60,r
