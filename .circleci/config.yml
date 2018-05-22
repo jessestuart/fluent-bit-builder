@@ -1,0 +1,93 @@
+version: 2.0
+
+build_jobs: &build_jobs
+  jobs:
+    - build-amd64
+    - build-arm64
+    # - build-armhf
+    - push-manifest:
+        requires:
+          - build-amd64
+          - build-arm64
+          # - build-armhf
+
+workflows:
+  version: 2
+  commit:
+    <<: *build_jobs
+  nightly:
+    <<: *build_jobs
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+
+build_tasks: &build_tasks
+  docker:
+    - image: docker:18-git
+  steps:
+
+    - checkout
+
+    - setup_remote_docker
+
+    - run:
+        name: Add dynamic shared vars to env.
+        command: |
+          apk add --no-cache curl
+          .circleci/load_env.sh
+
+    - run:
+        name: Build Docker image.
+        command: |
+          source $BASH_ENV
+          .circleci/build_image.sh
+
+    - run:
+        name: Push Docker image.
+        command: |
+          source $BASH_ENV
+          .circleci/push_image.sh
+
+jobs:
+  build-amd64:
+    <<: *build_tasks
+    environment:
+      TAG: amd64
+      TARGET: amd64
+      QEMU_ARCH: amd64
+  build-arm64:
+    <<: *build_tasks
+    environment:
+      QEMU_ARCH: aarch64
+      QEMU_VERSION: v2.11.0
+      TAG: arm64
+      TARGET: arm64v8
+  build-armhf:
+    <<: *build_tasks
+    environment:
+      QEMU_ARCH: arm
+      QEMU_VERSION: v2.11.0
+      TAG: arm
+      TARGET: arm32v7
+  push-manifest:
+    docker:
+      - image: docker:18
+    environment:
+    steps:
+      - setup_remote_docker
+
+      - run:
+          name: Load environment variables & pull latest release tag.
+          command: |
+            apk add --no-cache curl
+            .circleci/load_env.sh
+
+      - run:
+          name: Push Docker manifest.
+          command: |
+            source $BASH_ENV
+            .circleci/push_manifest.sh
