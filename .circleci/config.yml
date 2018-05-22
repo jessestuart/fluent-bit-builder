@@ -75,10 +75,11 @@ jobs:
       TARGET: arm32v7
   push-manifest:
     docker:
-      - image: alpine:3.7
+      - image: docker:18
     environment:
     steps:
       - checkout
+      - setup_remote_docker
 
       - run:
           name: Load environment variables & pull latest release tag.
