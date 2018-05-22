@@ -1,3 +1,10 @@
 [ver:1,total:360]
 .circleci/push_manifest.sh:260,1526976000:260,m
 .circleci/load_env.sh:100,1526976000:100,m
+
+[ver:1,total:60]
+.circleci/config.yml:60,1526961600:60,m
+
+[ver:1,total:120]
+.circleci/config.yml:90,1526961600:90,m
+.circleci/push_manifest.sh:30,1526961600:30,r
